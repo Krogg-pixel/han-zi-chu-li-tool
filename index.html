@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>汉字文本处理工具</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    textarea {
+      width: 300px;
+      height: 100px;
+      resize: none;
+    }
+
+    button {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>汉字文本处理工具</h1>
+
+  <label for="text1">文本1：</label>
+  <textarea id="text1" placeholder="请输入文本1"></textarea>
+
+  <label for="text2">文本2：</label>
+  <textarea id="text2" placeholder="请输入文本2"></textarea>
+
+  <label for="text3">文本3：</label>
+  <textarea id="text3" placeholder="请输入文本3"></textarea>
+
+  <button onclick="processText()">处理文本</button>
+
+  <h2>处理结果：</h2>
+  <div id="result"></div>
+
+  <script>
+    function findCommonCharacters(text1, text2) {
+      let set1 = new Set(text1);
+      let set2 = new Set(text2);
+      return new Set([...set1].filter(char => set2.has(char)));
+    }
+
+    function processText() {
+      let text1 = document.getElementById("text1").value;
+      let text2 = document.getElementById("text2").value;
+      let text3 = document.getElementById("text3").value;
+
+      let commonText1Text2 = findCommonCharacters(text1, text2);
+      let commonText2Text3 = findCommonCharacters(text2, text3);
+      let commonText1Text3 = findCommonCharacters(text1, text3);
+      let commonAll = new Set(
+        [...commonText1Text2].filter(char => commonText2Text3.has(char)).filter(char => commonText1Text3.has(char))
+      );
+
+      let resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = `
+        <p>文本1与文本2相同的字：${[...commonText1Text2].join("")}</p>
+        <p>文本2与文本3相同的字：${[...commonText2Text3].join("")}</p>
+        <p>文本1与文本3相同的字：${[...commonText1Text3].join("")}</p>
+        <p>文本1、文本2、文本3相同的字：${[...commonAll].join("")}</p>
+      `;
+    }
+  </script>
+</body>
+</html>
